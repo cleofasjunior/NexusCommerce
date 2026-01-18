@@ -1,0 +1,68 @@
+### Configurações Iniciais
+@UrlEstoque = http://localhost:6001
+@UrlVendas = http://localhost:5002
+
+# TOKEN JWT (Mantenha o seu token válido aqui)
+@AuthToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidW5pcXVlX25hbWUiOiJBZG1pbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2ODY3MjIyNSwiZXhwIjoxNzY4Njc1ODI1fQ.qs54PNkAjQRrIOZhj4POACG4D1mkF8f3VnqaWvyj1eQ
+
+### ==========================================
+### 1. CRIAR PRODUTO COM VARIAÇÃO (SKU)
+### ==========================================
+# @name create_product
+POST {{UrlEstoque}}/api/products
+Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
+
+{
+  "name": "Sapatilha Ponta Profissional",
+  "description": "Modelo SD-40",
+  "basePrice": 250.00,
+  "variants": [
+    {
+      "size": "37",
+      "color": "Rosa",
+      "quantity": 10
+    }
+  ]
+}
+
+### (Captura o ID do Produto e da VARIAÇÃO criada)
+@productId = {{create_product.response.body.id}}
+@variantId = {{create_product.response.body.variants[0].id}}
+
+
+### ==========================================
+### 2. CONFERIR ESTOQUE INICIAL
+### ==========================================
+GET {{UrlEstoque}}/api/products/{{productId}}
+Authorization: Bearer {{AuthToken}}
+
+
+### ==========================================
+### 3. REALIZAR VENDA (Passando a Variação Correta)
+### ==========================================
+POST {{UrlVendas}}/api/orders
+Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
+
+{
+  "customerEmail": "bailarina@teste.com",
+  "items": [
+    {
+      "productId": "{{productId}}",
+      "variantId": "{{variantId}}", 
+      "productName": "Sapatilha Ponta Profissional",
+      "unitPrice": 250.00,
+      "quantity": 1
+    }
+  ]
+}
+
+# OBS: Agora estamos enviando o "variantId" que o consumidor exige!
+
+### ==========================================
+### 4. CONFERIR BAIXA DE ESTOQUE
+### ==========================================
+# Esperado: A variação deve cair de 10 para 9
+GET {{UrlEstoque}}/api/products/{{productId}}
+Authorization: Bearer {{AuthToken}}

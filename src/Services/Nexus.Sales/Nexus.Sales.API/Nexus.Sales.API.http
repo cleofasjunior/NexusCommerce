@@ -1,0 +1,29 @@
+### Configuração da Variável (Nome simples, sem pontos)
+@HostAddress = http://localhost:5002
+
+### Teste de Conexão (Verificar se a API está online)
+# Esse endpoint não existe, mas serve para ver se bate no servidor
+GET {{HostAddress}}/swagger/index.html
+Accept: application/html
+
+###
+
+### Listar Pedidos (Teste real da API)
+GET {{HostAddress}}/api/orders
+Accept: application/json
+
+###
+
+### Criar Pedido (Teste de Integração)
+POST {{HostAddress}}/api/orders
+Content-Type: application/json
+
+{
+  "customerEmail": "teste@cliente.com",
+  "items": [
+    {
+      "productId": "insira-o-id-do-produto-aqui",
+      "quantity": 1
+    }
+  ]
+}

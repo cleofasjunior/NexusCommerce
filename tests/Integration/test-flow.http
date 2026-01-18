@@ -1,0 +1,79 @@
+### ==========================================
+### 0. AUTENTICAÇÃO (Via Gateway)
+### ==========================================
+
+### Login como ADMINISTRADOR
+# @name auth_admin
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+### (Variável Mágica: Guarda o Token)
+@authToken = {{auth_admin.response.body.token}}
+
+
+### ==========================================
+### FLUXO DA LOJA (Estoque e Vendas)
+### ==========================================
+
+### 1. Criar Produto (Bloqueado: Precisa de Token)
+# @name create_product
+POST http://localhost:5000/api/products
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Sapatilha Ponta Toshie",
+  "description": "Sapatilha profissional SD-40",
+  "basePrice": 250.00,
+  "variants": [
+    {
+      "size": "37",
+      "color": "Salmon",
+      "quantity": 10
+    },
+    {
+      "size": "36",
+      "color": "Salmon",
+      "quantity": 5
+    }
+  ]
+}
+
+### (Captura os IDs)
+@variantId = {{create_product.response.body.variants[0].id}}
+@productId = {{create_product.response.body.id}}
+
+
+### 2. Consultar Estoque (Bloqueado: Precisa de Token)
+GET http://localhost:5000/api/products/{{productId}}
+Authorization: Bearer {{authToken}}
+
+
+### 3. Realizar Venda
+# OBS: O serviço de Vendas AINDA não confere o token, mas já enviamos por garantia.
+POST http://localhost:5000/api/orders
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "items": [
+    {
+      "productId": "{{productId}}",
+      "variantId": "{{variantId}}",
+      "productName": "Sapatilha Ponta Toshie",
+      "unitPrice": 250.00,
+      "quantity": 2
+    }
+  ]
+}
+
+
+### 4. Consultar Estoque Pós Venda (Bloqueado: Precisa de Token)
+# Esperado: Quantidade 8
+GET http://localhost:5000/api/products/{{productId}}
+Authorization: Bearer {{authToken}}

@@ -1,0 +1,58 @@
+### Configuração do GATEWAY (Porta Única)
+@UrlGateway = http://localhost:5000
+
+### ==========================================
+### 1. AUTENTICAÇÃO VIA GATEWAY
+### ==========================================
+# O Gateway vai receber na 5000 e mandar para a 5001 (Identity) invisivelmente.
+# @name login
+POST {{UrlGateway}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@nexus.com",
+  "password": "SenhaForte@123"
+}
+
+### (Captura o Token Automaticamente)
+@authToken = {{login.response.body.token}}
+
+### ==========================================
+### 2. CRIAR PRODUTO VIA GATEWAY (Protegido)
+### ==========================================
+# O Gateway recebe na 5000, valida o token e manda para a 6001 (Stock)
+# @name create_product
+POST {{UrlGateway}}/api/products
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Sapatilha Gateway Master",
+  "description": "Teste via Ocelot na porta 5000",
+  "basePrice": 999.00,
+  "variants": []
+}
+
+### (Captura o ID do Produto)
+@productId = {{create_product.response.body.id}}
+
+### ==========================================
+### 3. CONSULTAR PRODUTO VIA GATEWAY
+### ==========================================
+GET {{UrlGateway}}/api/products/{{productId}}
+Authorization: Bearer {{authToken}}
+
+### ==========================================
+### 4. CRIAR PEDIDO VIA GATEWAY (Manda para 5002)
+### ==========================================
+# O Gateway recebe na 5000 e manda para a 5002 (Sales)
+POST {{UrlGateway}}/api/orders
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "productId": "{{productId}}",
+  "quantity": 1,
+  "customerName": "Cliente Gateway",
+  "customerEmail": "cliente@teste.com"
+}

@@ -1,0 +1,27 @@
+@UrlIdentity = http://localhost:5001
+
+### 1. Criar Usuário (Registro)
+# @name register
+POST {{UrlIdentity}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "admin@nexus.com",
+  "password": "SenhaForte@123",
+  "confirmPassword": "SenhaForte@123"
+}
+
+###
+
+### 2. Fazer Login (Pegar Token Real)
+# @name login
+POST {{UrlIdentity}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@nexus.com",
+  "password": "SenhaForte@123"
+}
+
+### (Variável para uso futuro)
+@authToken = {{login.response.body.token}}

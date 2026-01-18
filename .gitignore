@@ -1,0 +1,62 @@
+## =========================================================================
+## 1. COMPILAÇÃO E ARTEFATOS (.NET Core)
+## =========================================================================
+# Ignora as pastas de build em qualquer nível (bin e obj)
+[Bb]in/
+[Oo]bj/
+
+# Arquivos de saída de compilação específicos
+*.dll
+*.exe
+*.pdb
+*.nupkg
+
+## =========================================================================
+## 2. SEGURANÇA E SEGREDOS (CRÍTICO 🔒)
+## =========================================================================
+# Ignora configurações locais que podem ter senhas do Banco ou RabbitMQ
+# Mantemos o appsettings.json (template), mas ignoramos os overrides locais
+appsettings.Development.json
+appsettings.Local.json
+appsettings.Production.json
+
+# Arquivos de variáveis de ambiente e chaves
+.env
+.env.local
+*.pfx
+*.key
+*.pem
+
+## =========================================================================
+## 3. IDEs E EDITORES (Visual Studio / VS Code / Rider)
+## =========================================================================
+# Metadados do Visual Studio (pesado e específico do usuário)
+.vs/
+.vscode/
+
+# Arquivos de usuário e cache de solução
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## =========================================================================
+## 4. TESTES E COBERTURA
+## =========================================================================
+TestResults/
+*.trx
+coverage/
+coverage.json
+*.cobertura.xml
+
+## =========================================================================
+## 5. SISTEMA OPERACIONAL
+## =========================================================================
+thumbs.db
+.DS_Store
+
+## =========================================================================
+## 6. LOGS E DIAGNÓSTICOS
+## =========================================================================
+*.log
+logs/
