@@ -2,7 +2,7 @@
 
 > **Uma plataforma de e-commerce distribuída, escalável e resiliente, especializada no nicho de Balé, orquestrada via Arquitetura de Microsserviços.**
 
-[![Build & Test](https://github.com/cleofasjunior/NexusCommerce/actions/workflows/ci.yml/badge.svg)](https://github.com/cleofasjunior/NexusCommerce/actions)
+[![NexusCommerce CI](https://github.com/cleofasjunior/NexusCommerce/actions/workflows/ci.yml/badge.svg)](https://github.com/cleofasjunior/NexusCommerce/actions/workflows/ci.yml)
 ![.NET](https://img.shields.io/badge/.NET-9.0-purple)
 ![Architecture](https://img.shields.io/badge/Architecture-Microservices-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
